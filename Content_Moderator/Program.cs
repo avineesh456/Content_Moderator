@@ -3,6 +3,7 @@ using Content_Moderator;
 using Microsoft.Extensions.ML;
 using Microsoft.ML.Data;
 using System.Data;
+using static Content_Moderator.MLModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +22,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddPredictionEnginePool<MLModel.ModelInput, MLModel.ModelOutput>()
-    .FromFile("MLModel.mlnet");
+builder.Services.AddPredictionEnginePool<ModelInput, ModelOutput>()
+    .FromFile(filePath: "Custom_model.zip", watchForChanges: true);
 
 var app = builder.Build();
 

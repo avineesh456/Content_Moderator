@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.ML;
 using static Content_Moderator.MLModel;
+using static TorchSharp.torch.nn;
 
 namespace Content_Moderator.Controllers
 {
@@ -21,25 +22,26 @@ namespace Content_Moderator.Controllers
         [HttpPost("predict")]
         public ActionResult<PredictionResponse> Predict([FromBody] PredictionRequest request)
         {
-            // Map PredictionRequest to ModelInput
+            // Map the incoming API request to the format the ML model expects
             var modelInput = new ModelInput
             {
                 SentimentText = request.Text
-                // IsToxic is ignored in prediction, so we don’t set it
             };
 
-            var modelOutput = _predictionEngine.Predict(modelInput);
+            // Use the prediction engine pool to get a prediction
+            //ModelOutput prediction = _predictionEngine.Predict(modelInput); // Assuming _predictionEnginePool
 
-            // Map model output to clean response
+            ModelOutput prediction = _predictionEngine.Predict(example: modelInput);
+            // Map the model's output to your clean API response object
             var response = new PredictionResponse
             {
                 Text = request.Text,
-                IsToxic = modelOutput.PredictedLabel, // or whatever ML.NET named it
-                Score = modelOutput.Score  // Score[0] =>  Score for non-negative prediction , Score[1] = > Score for negative prediction
+                IsToxic = prediction.PredictedLabel, // true/false prediction
+                Probability = prediction.Probability, // The confidence score (0.0 to 1.0)
+                Score = prediction.Score // The raw score (a single float)
             };
 
             return Ok(response);
-
         }
     }
 }

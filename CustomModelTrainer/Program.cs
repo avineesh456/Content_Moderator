@@ -1,12 +1,11 @@
 ﻿using Microsoft.ML;
-// Make sure to add a 'using' statement for your main project's namespace
-using Content_Moderator; // <-- IMPORTANT: Change this to your main project's name
+using Content_Moderator;
 
 public class Program
 {
     // --- CONFIGURE YOUR FILE PATHS HERE ---
-    private static readonly string TRAIN_DATA_FILEPATH = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\TrainingData\Training_Cleaned2s.txt";
-    private static readonly string MODEL_FILEPATH = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\TrainingData\Cutom_model.zip";
+    private static readonly string TRAIN_DATA_FILEPATH = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\TrainingData\Sample_Final.txt";
+    private static readonly string MODEL_FILEPATH = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\TrainingData\Custom_model.zip";
     // ------------------------------------
 
     public static void Main(string[] args)

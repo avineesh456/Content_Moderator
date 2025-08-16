@@ -34,7 +34,7 @@ namespace Content_Moderator
         public class ModelOutput
         {
             [ColumnName(@"Sentiment")]
-            public uint Sentiment { get; set; }
+            public bool Sentiment { get; set; }
 
             [ColumnName(@"SentimentText")]
             public string SentimentText { get; set; }
@@ -47,7 +47,7 @@ namespace Content_Moderator
             public float Probability { get; set; }
 
             [ColumnName(@"Score")]
-            public float[] Score { get; set; }
+            public float Score { get; set; }
 
         }
 
@@ -72,11 +72,11 @@ namespace Content_Moderator
         /// </summary>
         /// <param name="input">model input.</param>
         /// <returns><seealso cref=" ModelOutput"/></returns>
-        public static IOrderedEnumerable<KeyValuePair<string, float>> PredictAllLabels(ModelInput input)
-        {
-            var result = Predict(input);
-            return GetSortedScoresWithLabels(result);
-        }
+        //public static IOrderedEnumerable<KeyValuePair<string, float>> PredictAllLabels(ModelInput input)
+        //{
+        //    var result = Predict(input);
+        //    return GetSortedScoresWithLabels(result);
+        //}
 
         /// <summary>
         /// Map the unlabeled result score array to the predicted label names.
@@ -84,21 +84,21 @@ namespace Content_Moderator
         /// <param name="result">Prediction to get the labeled scores from.</param>
         /// <returns>Ordered list of label and score.</returns>
         /// <exception cref="Exception"></exception>
-        public static IOrderedEnumerable<KeyValuePair<string, float>> GetSortedScoresWithLabels(ModelOutput result)
-        {
-            var unlabeledScores = result.Score;
-            var labelNames = GetLabels(result);
+        //public static IOrderedEnumerable<KeyValuePair<string, float>> GetSortedScoresWithLabels(ModelOutput result)
+        //{
+        //    var unlabeledScores = result.Score;
+        //    var labelNames = GetLabels(result);
 
-            Dictionary<string, float> labledScores = new Dictionary<string, float>();
-            for (int i = 0; i < labelNames.Count(); i++)
-            {
-                // Map the names to the predicted result score array
-                var labelName = labelNames.ElementAt(i);
-                labledScores.Add(labelName.ToString(), unlabeledScores[i]);
-            }
+        //    Dictionary<string, float> labledScores = new Dictionary<string, float>();
+        //    for (int i = 0; i < labelNames.Count(); i++)
+        //    {
+        //        // Map the names to the predicted result score array
+        //        var labelName = labelNames.ElementAt(i);
+        //        labledScores.Add(labelName.ToString(), unlabeledScores[i]);
+        //    }
 
-            return labledScores.OrderByDescending(c => c.Value);
-        }
+        //    return labledScores.OrderByDescending(c => c.Value);
+        //}
 
         /// <summary>
         /// Get the ordered label names.
@@ -130,15 +130,10 @@ namespace Content_Moderator
         public static ModelOutput Predict(ModelInput input)
         {
             var predEngine = PredictEngine.Value;
-            var output = predEngine.Predict(input);
-            var scores = output.Score;
 
-            // To get scores sum up to 1
-            var exp = scores.Select(x => (float)Math.Exp(x));
-            var softMaxScores = exp.Select(x => x / exp.Sum()).ToArray();
-            output.Score = softMaxScores;
-            return output;
-
+            // The Predict() method now directly returns an object
+            // with the correct Score and Probability.
+            return predEngine.Predict(input);
         }
     }
 }

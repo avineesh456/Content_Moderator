@@ -4,6 +4,10 @@
     {
         public string Text { get; set; }
         public bool IsToxic { get; set; }
-        public float[] Score { get; set; }
+
+        public float Probability { get; set; }
+        
+        public float Score { get; set; }
+
     }
 }

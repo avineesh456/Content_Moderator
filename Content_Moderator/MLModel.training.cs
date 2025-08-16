@@ -89,16 +89,10 @@ namespace Content_Moderator
         /// <returns></returns>
         public static IEstimator<ITransformer> BuildPipeline(MLContext mlContext)
         {
-            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "Label", inputColumnName: "Sentiment")
+            var pipeline = mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName: "SentimentText")
 
-         // 1. Convert the text into a numerical feature vector
-         .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName: "SentimentText"))
-
-         // 2. Choose a trainer that outputs probabilities
-         .Append(mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: "Label", featureColumnName: "Features"))
-
-         // 3. Convert the predicted label back to its original value
-         .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel"));
+        // The trainer now directly uses the 'Sentiment' column, which is already a bool
+        .Append(mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: "Sentiment", featureColumnName: "Features"));
 
             return pipeline;
         }
