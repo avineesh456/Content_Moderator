@@ -1,13 +1,18 @@
-
-using Content_Moderator;
 using Microsoft.Extensions.ML;
-using Microsoft.ML.Data;
-using System.Data;
 using static Content_Moderator.MLModel;
+using StackExchange.Redis;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "ContentModerator_";
+});
+
 
 builder.Services.AddCors(options =>
 {
@@ -24,6 +29,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddPredictionEnginePool<ModelInput, ModelOutput>()
     .FromFile(filePath: "Custom_model.zip", watchForChanges: true);
+
 
 var app = builder.Build();
 

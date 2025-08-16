@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  # This is your ASP.NET Core application
+  webapp:
+    build: .
+    ports:
+      - "8080:8080" # Map port 8080 on your machine to port 8080 in the container
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+    depends_on:
+      - redis
+
+  # This is the Redis service
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
