@@ -6,9 +6,9 @@
     "ReadMultiLines": false,
     "KeepDiacritics": false,
     "KeepPunctuations": false,
-    "AllowQuoting": false,
+    "AllowQuoting": true,
     "Type": "TabularFile",
-    "FilePath": "C:\\Users\\akl_r\\OneDrive\\Desktop\\System Design C#\\Content Moderation\\Content_Moderator\\Training_Cleaned2s.txt",
+    "FilePath": "C:\\Users\\akl_r\\OneDrive\\Desktop\\System Design C#\\Content Moderation\\Content_Moderator\\TrainingData\\Training_Cleaned2s.txt",
     "Delimiter": "\t",
     "DecimalMarker": ".",
     "HasHeader": true,
@@ -43,8 +43,8 @@
         "Version": 1,
         "Type": "Trial",
         "TrainerName": "TextClassificationMulti",
-        "Score": 0.690194180234777,
-        "RuntimeInSeconds": 66.008,
+        "Score": 0.61989650923606077,
+        "RuntimeInSeconds": 68.183,
         "Parameter": {
           "_SCHEMA_": "e0 * e1 * e2",
           "e0": {

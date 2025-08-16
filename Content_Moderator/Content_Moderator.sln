@@ -6,6 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content_Moderator", "Content_Moderator.csproj", "{F46BF368-F483-4392-95A7-40D160A48B6C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data_Validator", "..\Data_Validator\Data_Validator.csproj", "{FE97F8B2-2F2B-46EF-8453-BD59D1D118C0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F46BF368-F483-4392-95A7-40D160A48B6C} = {F46BF368-F483-4392-95A7-40D160A48B6C}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomModelTrainer", "..\CustomModelTrainer\CustomModelTrainer.csproj", "{1C13E138-B886-4DF0-8FF9-B945AE23BAC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,10 @@ Global
 		{FE97F8B2-2F2B-46EF-8453-BD59D1D118C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE97F8B2-2F2B-46EF-8453-BD59D1D118C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE97F8B2-2F2B-46EF-8453-BD59D1D118C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C13E138-B886-4DF0-8FF9-B945AE23BAC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C13E138-B886-4DF0-8FF9-B945AE23BAC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C13E138-B886-4DF0-8FF9-B945AE23BAC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C13E138-B886-4DF0-8FF9-B945AE23BAC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

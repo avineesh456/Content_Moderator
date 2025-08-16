@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 public class Program
 {
     static void Main(string[] args)
     {
         Console.WriteLine("Hello!");
 
-        string inputFilePath = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\Training_Cleaned.txt";
-        string outputFilePath = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\Training_Cleaned2s.txt";
+        string inputFilePath = @"C:\path\to\your\Training_Complete.txt";
+        string outputFilePath = @"C:\path\to\your\Training_Complete_fixed.txt";
 
         try
         {

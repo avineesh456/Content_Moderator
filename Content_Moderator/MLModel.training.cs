@@ -14,19 +14,19 @@ namespace Content_Moderator
 {
     public partial class MLModel
     {
-        public const string RetrainFilePath =  @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\Training_Cleaned2s.txt";
+        public const string RetrainFilePath = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\TrainingData\Training_Cleaned2s.txt";
         public const char RetrainSeparatorChar = '	';
-        public const bool RetrainHasHeader =  true;
-        public const bool RetrainAllowQuoting =  false;
+        public const bool RetrainHasHeader = true;
+        public const bool RetrainAllowQuoting = true;
 
-         /// <summary>
+        /// <summary>
         /// Train a new model with the provided dataset.
         /// </summary>
         /// <param name="outputModelPath">File path for saving the model. Should be similar to "C:\YourPath\ModelName.mlnet"</param>
         /// <param name="inputDataFilePath">Path to the data file for training.</param>
         /// <param name="separatorChar">Separator character for delimited training file.</param>
         /// <param name="hasHeader">Boolean if training file has a header.</param>
-        public static void Train(string outputModelPath, string inputDataFilePath = RetrainFilePath, char separatorChar = RetrainSeparatorChar, bool hasHeader = RetrainHasHeader, bool allowQuoting = RetrainAllowQuoting)
+        public static void ReTrain(string outputModelPath, string inputDataFilePath = RetrainFilePath, char separatorChar = RetrainSeparatorChar, bool hasHeader = RetrainHasHeader, bool allowQuoting = RetrainAllowQuoting)
         {
             var mlContext = new MLContext();
 
@@ -89,12 +89,18 @@ namespace Content_Moderator
         /// <returns></returns>
         public static IEstimator<ITransformer> BuildPipeline(MLContext mlContext)
         {
-            // Data process configuration with pipeline data transformations
-            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName:@"Sentiment",inputColumnName:@"Sentiment",addKeyValueAnnotationsAsText:false)      
-                                    .Append(mlContext.MulticlassClassification.Trainers.TextClassification(labelColumnName: @"Sentiment", sentence1ColumnName: @"SentimentText"))      
-                                    .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName:@"PredictedLabel",inputColumnName:@"PredictedLabel"));
+            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "Label", inputColumnName: "Sentiment")
+
+         // 1. Convert the text into a numerical feature vector
+         .Append(mlContext.Transforms.Text.FeaturizeText(outputColumnName: "Features", inputColumnName: "SentimentText"))
+
+         // 2. Choose a trainer that outputs probabilities
+         .Append(mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(labelColumnName: "Label", featureColumnName: "Features"))
+
+         // 3. Convert the predicted label back to its original value
+         .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: "PredictedLabel"));
 
             return pipeline;
         }
     }
- }
+}

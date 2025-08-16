@@ -34,8 +34,8 @@ namespace Content_Moderator.Controllers
             var response = new PredictionResponse
             {
                 Text = request.Text,
-                IsToxic = modelOutput.Sentiment, // or whatever ML.NET named it
-                Score = modelOutput.Score[1]
+                IsToxic = modelOutput.PredictedLabel, // or whatever ML.NET named it
+                Score = modelOutput.Score  // Score[0] =>  Score for non-negative prediction , Score[1] = > Score for negative prediction
             };
 
             return Ok(response);

@@ -1,6 +1,8 @@
 
 using Content_Moderator;
 using Microsoft.Extensions.ML;
+using Microsoft.ML.Data;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +23,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddPredictionEnginePool<MLModel.ModelInput, MLModel.ModelOutput>()
     .FromFile("MLModel.mlnet");
-
 
 var app = builder.Build();
 
