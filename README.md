@@ -1,4 +1,5 @@
 AI-Powered Content Moderator Microservice
+
 This project is a dockerized .NET microservice that provides real-time content moderation using a custom-trained ML.NET model. It analyzes input text to predict its toxicity and is architected for high performance and observability, making it a robust foundation for real-world applications.
 
 Features
