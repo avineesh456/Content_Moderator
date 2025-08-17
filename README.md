@@ -15,15 +15,20 @@ Structured Logging: Implemented with Serilog to provide detailed operational log
 
 Tech Stack
 Category	Technology / Library
-Backend Framework	.NET 8, ASP.NET Core Web API
-Machine Learning	ML.NET
-Caching	Redis (via Microsoft.Extensions.Caching.StackExchangeRedis)
-Containerization	Docker, Docker Compose
-Logging	Serilog (Sinks for Console and File)
-CSV Data Processing	CsvHelper
+Backend Framework:	.NET 9, ASP.NET Core Web API
 
-Export to Sheets
+Machine Learning:	ML.NET
+
+Caching;	Redis (via Microsoft.Extensions.Caching.StackExchangeRedis)
+
+Containerization:	Docker, Docker Compose
+
+Logging:	Serilog (Sinks for Console and File)
+
+CSV Data Processing:	CsvHelper Export to Sheets
+
 System Architecture
+
 The service operates on a simple, scalable request-response flow. Incoming requests are first checked against the Redis cache. If the result is found (a cache hit), it's returned immediately. If not (a cache miss), the request is passed to the ML.NET model for prediction, and the result is then cached for future requests before being returned to the client.
 
 Code snippet
@@ -47,25 +52,31 @@ sequenceDiagram
         Redis Cache-->>-API (Docker): Confirm storage
         API (Docker)-->>-Client: Prediction Response
     end
+    
 Getting Started
+
 Follow these instructions to get a local copy up and running for development and testing.
 
 Prerequisites
-.NET 8 SDK
+.NET 9 SDK
 
 Docker Desktop
 
 Configuration & Setup
+
 Clone the repository:
 
 Bash
 
 git clone <your-repository-url>
 cd <repository-name>
+
 Place the Model File:
+
 Ensure your trained ML.NET model, named model.zip, is present in the root of the main web API project folder.
 
 Verify Configuration:
+
 The appsettings.Development.json file should contain the connection string for Redis. This is pre-configured for Docker Compose.
 
 JSON
@@ -112,8 +123,12 @@ JSON
   "probability": 0.08,
   "score": -2.45
 }
+
 Future Improvements
+
 This project serves as a strong foundation. Future work could include:
+
+Periodic training of the model. Have crawler services which crawl actual conversations and append data to the master data-set. Automatically retrain the model on this updated data (monthly).
 
 CI/CD Pipeline: Automate the build, testing, and deployment process using GitHub Actions or Azure DevOps.
 
