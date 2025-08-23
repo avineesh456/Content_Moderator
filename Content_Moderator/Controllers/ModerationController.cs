@@ -36,14 +36,22 @@ namespace Content_Moderator.Controllers
                 if (!string.IsNullOrEmpty(cacheKey))
                 {
 
-                    string cachedPredictionJson = await _cache.GetStringAsync(cacheKey);
-
-                    if (cachedPredictionJson != null)
+                    try
                     {
-                        //logging a cache hit.
-                        _logger.LogInformation("Cache HIT for key: {CacheKey}", cacheKey);
-                        var cachedResponse = JsonSerializer.Deserialize<PredictionResponse>(cachedPredictionJson);
-                        return Ok(cachedResponse);
+                        string cachedPredictionJson = await _cache.GetStringAsync(cacheKey);
+
+                        if (cachedPredictionJson != null)
+                        {
+                            //logging a cache hit.
+                            _logger.LogInformation("Cache HIT for key: {CacheKey}", cacheKey);
+                            var cachedResponse = JsonSerializer.Deserialize<PredictionResponse>(cachedPredictionJson);
+                            return Ok(cachedResponse);
+                        }
+                    }
+
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning("Coudld not connect to redis : " + ex.Message);
                     }
                 }
 
@@ -69,11 +77,19 @@ namespace Content_Moderator.Controllers
                 // 3. Save the new prediction to the cache for future requests
                 string newPredictionJson = JsonSerializer.Serialize(response);
                 var cacheEntryOptions = new DistributedCacheEntryOptions
-            {
-                // Cache the result for 1 day
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1) // 1 day ttl
-            };
-                await _cache.SetStringAsync(cacheKey, newPredictionJson, cacheEntryOptions);
+                {
+                    // Cache the result for 1 day
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1) // 1 day ttl
+                };
+
+                try
+                {
+                    await _cache.SetStringAsync(cacheKey, newPredictionJson, cacheEntryOptions);
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogWarning("Cannot set key in redis as : " + ex.Message);
+                }
 
                 //log success
                 _logger.LogInformation("Response successfully obtained from model");

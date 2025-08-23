@@ -5,7 +5,7 @@ services:
   webapp:
     build: .
     ports:
-      - "8080:8080" # Map port 8080 on your machine to port 8080 in the container
+      - "8080:8080" # Map port 8080 on machine to port 8080 in the container
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080

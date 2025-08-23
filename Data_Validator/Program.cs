@@ -14,20 +14,30 @@ public class Program
     {
         Console.WriteLine("Hello!");
 
-        string inputFilePath = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\TrainingData\train.csv";
-        string outputFilePath = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\TrainingData\Sample_Final.txt";
+        string inputFilePath = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\TrainingData\testing_data.csv";
+        string outputFilePath = @"C:\Users\akl_r\OneDrive\Desktop\System Design C#\Content Moderation\Content_Moderator\TrainingData\test_converted.txt";
 
 
-        Console.WriteLine("Starting CSV processing...");
         try
         {
-            ProcessCsvFile(inputFilePath, outputFilePath);
-            Console.WriteLine($"\nProcessing complete! Cleaned data saved to: {outputFilePath}");
+            ProcessTestData(inputFilePath, outputFilePath);
+            Console.WriteLine($"\nProcessing complete! Cleaned test data saved to: {outputFilePath}");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"\nAn error occurred: {ex.Message}");
         }
+
+        //Console.WriteLine("Starting CSV processing...");
+        //try
+        //{
+        //    ProcessCsvFile(inputFilePath, outputFilePath);
+        //    Console.WriteLine($"\nProcessing complete! Cleaned data saved to: {outputFilePath}");
+        //}
+        //catch (Exception ex)
+        //{
+        //    Console.WriteLine($"\nAn error occurred: {ex.Message}");
+        //}
 
         //try
         //{
@@ -96,7 +106,52 @@ public class Program
 
     }
 
+    public static void ProcessTestData(string inputPath, string outputPath)
+    {
 
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            BadDataFound = null,
+            PrepareHeaderForMatch = args => args.Header.ToLower().Replace("_", ""), // Handles "is_toxic" header
+        };
+
+        using (var reader = new StreamReader(inputPath))
+        using (var csv = new CsvReader(reader, config))
+        using (var writer = new StreamWriter(outputPath))
+        {
+            // Write the header for your ML.NET training file
+            writer.WriteLine("Sentiment\tSentimentText");
+
+            csv.Read();
+            csv.ReadHeader();
+
+            long rowCount = 0;
+            while (csv.Read())
+            {
+                var commentText = csv.GetField<string>("text");
+                var toxicityLabel = csv.GetField<string>("istoxic"); // Matched via PrepareHeaderForMatch
+
+                if (!string.IsNullOrWhiteSpace(commentText) && !string.IsNullOrWhiteSpace(toxicityLabel))
+                {
+                    // Convert string label to 0 or 1
+                    int sentimentValue = toxicityLabel.Equals("Toxic", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
+
+                    // Clean the text to be a single, trimmed line
+                    string cleanedText = Regex.Replace(commentText, @"\s+", " ").Trim();
+
+                    // Write the data in the required tab-separated format
+                    writer.WriteLine($"{sentimentValue}\t{cleanedText}");
+                }
+
+                rowCount++;
+                if (rowCount % 100000 == 0)
+                {
+                    Console.Write($"\rProcessed {rowCount:N0} rows...");
+                }
+            }
+            Console.Write($"\rProcessed {rowCount:N0} rows...");
+        }
+    }
     public static void FixUnclosedQuotes(string inputPath, string outputPath)
     {
         // Use a list to hold the corrected lines
